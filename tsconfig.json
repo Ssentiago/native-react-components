@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "ESNext",
         "target": "ES2023",
-        "moduleResolution": "bundler",
+        "moduleResolution": "node",
         "jsx": "react-jsx",
         "types": ["node"],
         "strict": true,
@@ -11,12 +11,9 @@
         "esModuleInterop": true,
         "allowImportingTsExtensions": false,
         "resolveJsonModule": true,
-        "outDir": "dist/",
-        "removeComments": true,
-        "incremental": true,
-        "sourceMap": false,
-        "declarationMap": false,
-        "inlineSourceMap": false,
-        "inlineSources": false
-    }
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
 }
