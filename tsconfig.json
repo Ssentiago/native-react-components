@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "ESNext",
         "target": "ES2023",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "jsx": "react-jsx",
         "types": ["node"],
         "strict": true,
@@ -10,6 +10,13 @@
         "skipLibCheck": true,
         "esModuleInterop": true,
         "allowImportingTsExtensions": false,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "outDir": "dist/",
+        "removeComments": true,
+        "incremental": true,
+        "sourceMap": false,
+        "declarationMap": false,
+        "inlineSourceMap": false,
+        "inlineSources": false
     }
 }

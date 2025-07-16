@@ -1,10 +1,11 @@
 {
-    "name": "@obsidian-toolkit/native-react-components",
-  "publishConfig": {
-    "access": "public"
-  },    "version": "0.1.0",
+    "name": "@obsidian-lib/native-react-components",
+    "publishConfig": {
+        "access": "public"
+    },
+    "version": "0.0.1",
     "scripts": {
-      "build": "bun build src/index.ts --outfile=dist/index.js --format=esm --target=node && tsc --emitDeclarationOnly"
+        "build": "tsc"
     },
     "devDependencies": {
         "@changesets/cli": "^2.29.5",
