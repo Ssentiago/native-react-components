@@ -25,7 +25,7 @@ const OSetting: FC<OSettingProps> = ({
     const obsidianSettingRef = useRef<Setting | null>(null);
 
     useLayoutEffect(() => {
-        if (process.env.OSETTING_DISABLE_STYLES === 'true') {
+        if ((window as any).OSETTING_DISABLE_STYLES === 'true') {
             return;
         }
 
