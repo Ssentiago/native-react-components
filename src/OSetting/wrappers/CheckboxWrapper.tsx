@@ -43,7 +43,7 @@ export const CheckboxWrapper: FC<{
     return (
         <div
             className={`checkbox-container ${checked ? 'is-enabled' : ''} ${isDisabled ? 'is-disabled' : ''}`}
-            onClick={handleDivClick}
+            onPointerDown={handleDivClick}
             {...ariaProps}
             style={{
                 cursor: isDisabled ? 'not-allowed' : 'default',
