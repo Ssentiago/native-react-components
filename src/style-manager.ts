@@ -57,37 +57,37 @@ export class StyleManager {
 
 export const OSETTING_STYLES_ID = 'osetting-styles';
 export const OSETTING_CSS = `
-   .react-obsidian-settings-item {
+   .osetting-item {
        padding: 8px !important;
        margin-bottom: 12px !important;
        transition: box-shadow 0.3s ease !important;
        border-bottom: 1px solid var(--color-base-30) !important;
    }
    
-   .react-obsidian-settings-item.no-border {
+   .osetting-item.no-border {
        border-bottom: none !important;
    }
    
-   .react-obsidian-settings-item:last-child {
+   .osetting-item:last-child {
        border-bottom: none !important;
    }
    
-   .react-obsidian-settings-item .setting-item .button-active {
+   .osetting-item .setting-item .button-active {
        background-color: var(--interactive-accent) !important;
        color: var(--text-on-accent) !important;
    }
    
-   .react-obsidian-settings-item .setting-item .clickable-icon {
+   .osetting-item .setting-item .clickable-icon {
        color: var(--text-muted);
        transition: color 0.2s ease;
    }
    
-   .react-obsidian-settings-item .setting-item .clickable-icon:hover {
+   .osetting-item .setting-item .clickable-icon:hover {
        color: var(--text-normal);
    }
    
-   .react-obsidian-settings-item .setting-item input[type='text'],
-   .react-obsidian-settings-item .setting-item input[type='number'] {
+   .osetting-item .setting-item input[type='text'],
+   .osetting-item .setting-item input[type='number'] {
        background-color: var(--background-secondary);
        border: 1px solid var(--background-modifier-border);
        border-radius: 4px;
@@ -95,24 +95,24 @@ export const OSETTING_CSS = `
        width: 100%;
    }
    
-   .react-obsidian-settings-item svg {
+   .osetting-item svg {
        width: 18px;
        height: 18px;
        transition: transform 0.2s ease;
        flex-shrink: 0;
    }
    
-   .react-obsidian-settings-item.collapsible {
+   .osetting-item.collapsible {
     margin-bottom: 1em;
     }
     
-    .react-obsidian-settings-item.collapsible details {
+    .osetting-item.collapsible details {
     border: 1px solid transparent;
     border-radius: 4px;
     padding: 0.5em;
 }
 
-.react-obsidian-settings-item.collapsible summary {
+.osetting-item.collapsible summary {
     outline: none;
     display: list-item;
     list-style: disclosure-closed;
@@ -120,7 +120,7 @@ export const OSETTING_CSS = `
     gap: 0.5em;
 }
 
-.react-obsidian-settings-item.collapsible details[open] > summary {
+.osetting-item.collapsible details[open] > summary {
     list-style: disclosure-open;
 }
 

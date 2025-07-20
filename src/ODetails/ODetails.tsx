@@ -57,7 +57,7 @@ const ODetails: FC<PropsWithChildren<ODetailsProps>> = ({
 
     return (
         <div
-            className={`react-obsidian-settings-item collapsible ${className ?? ''}`}
+            className={`osetting-item collapsible ${className ?? ''}`}
         >
             <details
                 open={open}

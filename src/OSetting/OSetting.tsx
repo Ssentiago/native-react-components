@@ -62,7 +62,7 @@ const OSetting: FC<OSettingProps> = ({
 
     if (setupObsidianSettingManually) {
         return (
-            <div className={'react-obsidian-settings-item'}>
+            <div className={'osetting-item'}>
                 <div ref={containerRef} />
             </div>
         );
@@ -70,7 +70,7 @@ const OSetting: FC<OSettingProps> = ({
 
     return (
         <div
-            className={`react-obsidian-settings-item ${noBorder ? 'no-border' : ''} ${className ?? ''}`}
+            className={`osetting-item ${noBorder ? 'no-border' : ''} ${className ?? ''}`}
         >
             <div
                 className={`setting-item ${heading ? 'setting-item-heading' : ''}`}
