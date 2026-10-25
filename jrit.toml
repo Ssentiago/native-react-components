@@ -1,0 +1,17 @@
+[project]
+name = "native-react-components"
+repo = "Ssentiago/native-react-components"
+branches = ["main"]
+changelog_type = "conventional"
+changelog = "CHANGELOG.md"
+release_mode = "local"
+
+[[components]]
+name = "native-react-components"
+path = "."
+build = "bun run build"
+artifact = "./dist/native-react-components.tgz"
+zip = false
+
+[[components.version_files]]
+file = "package.json"
