@@ -12,7 +12,7 @@ export const SliderWrapper: FC<{
     const [showTooltip, setShowTooltip] = useState(false);
     const [tooltipValue, setTooltipValue] = useState('');
     const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isDragging, setIsDragging] = useState(false);
 
     const updateTooltipPosition = () => {

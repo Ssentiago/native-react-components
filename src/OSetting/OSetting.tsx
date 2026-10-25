@@ -2,6 +2,7 @@ import React, { FC, useLayoutEffect, useRef } from 'react';
 
 import { Setting } from 'obsidian';
 
+import { useSettingRoot } from '../SettingRoot/SettingRootContext';
 import {
     OSETTING_CSS,
     OSETTING_STYLES_ID,
@@ -21,6 +22,7 @@ const OSetting: FC<OSettingProps> = ({
     setupObsidianSettingManually,
     children,
 }) => {
+    useSettingRoot();
     const containerRef = useRef<HTMLDivElement>(null);
     const obsidianSettingRef = useRef<Setting | null>(null);
 
