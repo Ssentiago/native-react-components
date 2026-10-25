@@ -2,8 +2,10 @@
 
 React components that mirror Obsidian's native settings DOM.
 
+Install from a GitHub Release:
+
 ```bash
-npm i @obsidian-lib/native-react-components
+npm i https://github.com/Ssentiago/native-react-components/releases/download/v0.1.0/native-react-components.tgz
 ```
 
 ```tsx
