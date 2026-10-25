@@ -20,6 +20,25 @@ Peer deps: `react` ^19, `obsidian` ^1.8.
 - [ODetails](#odetails) — collapsible section
 - [useSettingRoot](#usesettingroot) — root context hook
 
+### Controls
+
+- [OToggle](#otoggle) — checkbox toggle
+- [ODropdown](#odropdown) — select dropdown
+- [OText](#otext) — text input
+- [ONumber](#onumber) — number input
+- [OTextArea](#otextarea) — multiline text
+- [OSlider](#oslider) — range slider
+- [OColor](#ocolor) — color picker
+- [OColorSwatch](#ocolorswatch) — light/dark swatches
+- [OSecret](#osecret) — password input
+- [OSearch](#osearch) — search input
+- [OButton](#obutton) — action button
+- [OExtraButton](#oextrabutton) — icon button
+- [OFolder](#ofolder) — folder path
+- [OFile](#ofile) — file path
+- [OPathSuggestInput](#opathsuggestinput) — path with autocomplete
+- [OSyncToggle](#osynctoggle) — sync toggle
+
 ---
 
 ## SettingRoot
@@ -586,6 +605,669 @@ const DoneButton = () => {
     const { closePage } = useSettingRoot();
     return <button onClick={closePage}>Done</button>;
 };
+```
+
+---
+
+## Controls
+
+Atomic control components. Each mirrors a native Obsidian control. All require `SettingRoot` in the parent tree.
+
+Shared props (every control):
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `disabled` | `boolean` | `false` | Disable the control |
+| `className` | `string` | — | Extra class |
+| `aria-label` | `string` | — | Accessible name |
+
+---
+
+## OToggle
+
+Obsidian `ToggleComponent` mirror. `.checkbox-container` wrapping `<input type="checkbox">`.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `boolean` | — | Current state |
+| `onChange` | `(value: boolean) => void` | — | Change handler |
+
+### Example — dark mode
+
+```tsx
+<OToggle value={dark} onChange={setDark} aria-label='Dark mode' />
+```
+
+### Example — inside a setting row
+
+```tsx
+<OSetting name='Spellcheck' desc='Check spelling while typing'>
+    <OToggle value={spell} onChange={setSpell} />
+</OSetting>
+```
+
+### Example — disabled sync lock
+
+```tsx
+<OToggle value={locked} onChange={setLocked} disabled aria-label='Lock' />
+```
+
+---
+
+## ODropdown
+
+Obsidian `DropdownComponent` mirror. `<select class="dropdown">`.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Selected value |
+| `options` | `Record<string, string>` | — | Map of value → label |
+| `onChange` | `(value: string) => void` | — | Change handler |
+| `placeholder` | `string` | — | Placeholder when `value === ''` |
+
+### Example — theme selector
+
+```tsx
+<ODropdown
+    value={theme}
+    onChange={setTheme}
+    options={{ system: 'System', light: 'Light', dark: 'Dark' }}
+    aria-label='Theme'
+/>
+```
+
+### Example — with placeholder
+
+```tsx
+<ODropdown
+    value={lang}
+    onChange={setLang}
+    options={{ en: 'English', ru: 'Русский', de: 'Deutsch' }}
+    placeholder='Choose language'
+/>
+```
+
+### Example — numeric keys
+
+```tsx
+<ODropdown
+    value={String(interval)}
+    onChange={v => setInterval(Number(v))}
+    options={{ '5': '5 min', '15': '15 min', '60': '1 hour' }}
+    aria-label='Refresh interval'
+/>
+```
+
+---
+
+## OText
+
+Obsidian `TextComponent` mirror. `<input type="text">` with optional inline validation.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Current value |
+| `onChange` | `(value: string) => void` | — | Change handler (fires only when valid) |
+| `placeholder` | `string` | — | Placeholder |
+| `validate` | `(value: string) => string \| void` | — | Return non-empty string to reject and show error |
+
+### Example — folder name
+
+```tsx
+<OText value={folder} onChange={setFolder} placeholder='Inbox' />
+```
+
+### Example — with validation
+
+```tsx
+<OText
+    value={slug}
+    onChange={setSlug}
+    validate={v => (v.includes(' ') ? 'Spaces not allowed' : undefined)}
+    placeholder='my-note'
+/>
+```
+
+### Example — email field
+
+```tsx
+<OText
+    value={email}
+    onChange={setEmail}
+    validate={v => (v && !v.includes('@') ? 'Invalid email' : undefined)}
+    aria-label='Email'
+/>
+```
+
+---
+
+## ONumber
+
+Obsidian `SettingNumberControl` mirror. `<input type="number">` with min/max/step.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | — | Current value |
+| `onChange` | `(value: number) => void` | — | Change handler |
+| `placeholder` | `string` | — | Placeholder |
+| `min` | `number` | — | Minimum |
+| `max` | `number` | — | Maximum |
+| `step` | `number` | — | Step |
+| `validate` | `(value: number) => string \| void` | — | Return non-empty string to reject |
+
+### Example — font size
+
+```tsx
+<ONumber value={size} onChange={setSize} min={10} max={32} step={1} />
+```
+
+### Example — percentage
+
+```tsx
+<ONumber
+    value={opacity}
+    onChange={setOpacity}
+    min={0}
+    max={100}
+    step={5}
+    validate={v => (v > 90 ? 'Too high for readability' : undefined)}
+    aria-label='Opacity %'
+/>
+```
+
+### Example — unbounded counter
+
+```tsx
+<ONumber value={count} onChange={setCount} placeholder='0' />
+```
+
+---
+
+## OTextArea
+
+Obsidian `TextAreaComponent` mirror. `<textarea>` with optional validation.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Current value |
+| `onChange` | `(value: string) => void` | — | Change handler |
+| `placeholder` | `string` | — | Placeholder |
+| `rows` | `number` | `4` | Visible rows |
+| `validate` | `(value: string) => string \| void` | — | Return non-empty string to reject |
+
+### Example — custom CSS
+
+```tsx
+<OTextArea value={css} onChange={setCss} rows={6} placeholder='/* your CSS */' />
+```
+
+### Example — short note
+
+```tsx
+<OTextArea
+    value={note}
+    onChange={setNote}
+    rows={2}
+    validate={v => (v.length > 200 ? 'Max 200 characters' : undefined)}
+/>
+```
+
+### Example — code snippet
+
+```tsx
+<OTextArea
+    value={snippet}
+    onChange={setSnippet}
+    rows={10}
+    placeholder='console.log("hello")'
+    aria-label='Snippet'
+/>
+```
+
+---
+
+## OSlider
+
+Obsidian `SliderComponent` mirror. `<input type="range">` with inline value display.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | — | Current value |
+| `onChange` | `(value: number) => void` | — | Change handler |
+| `min` | `number` | — | Minimum |
+| `max` | `number` | — | Maximum |
+| `step` | `number` | — | Step |
+| `formatValue` | `(value: number) => string` | `String(value)` | Format inline value; return `''` to hide |
+
+### Example — zoom level
+
+```tsx
+<OSlider value={zoom} onChange={setZoom} min={50} max={200} step={10} />
+```
+
+### Example — custom format
+
+```tsx
+<OSlider
+    value={volume}
+    onChange={setVolume}
+    min={0}
+    max={1}
+    step={0.01}
+    formatValue={v => `${Math.round(v * 100)}%`}
+/>
+```
+
+### Example — hidden value
+
+```tsx
+<OSlider
+    value={blur}
+    onChange={setBlur}
+    min={0}
+    max={20}
+    step={1}
+    formatValue={() => ''}
+    aria-label='Blur radius'
+/>
+```
+
+---
+
+## OColor
+
+Obsidian `SettingColorControl` mirror. Native `<input type="color">` styled as a swatch.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Hex color (`#rrggbb`) |
+| `onChange` | `(value: string) => void` | — | Change handler |
+
+### Example — accent color
+
+```tsx
+<OColor value={accent} onChange={setAccent} aria-label='Accent color' />
+```
+
+### Example — row
+
+```tsx
+<OSetting name='Highlight' desc='Marker color'>
+    <OColor value={highlight} onChange={setHighlight} />
+</OSetting>
+```
+
+### Example — no-hash normalization
+
+```tsx
+<OColor value={'ff0000'} onChange={setBg} aria-label='Background' />
+```
+
+---
+
+## OColorSwatch
+
+Custom control: light/dark color swatches with copy and restore-default actions.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Light-theme color |
+| `onChange` | `(value: string) => void` | — | Light color change |
+| `darkValue` | `string` | — | Dark-theme color (enables second swatch) |
+| `onDarkChange` | `(value: string) => void` | — | Dark color change |
+| `onRestoreDefault` | `() => void` | — | Shows restore button |
+| `onOpenPicker` | `(target: 'light' \| 'dark') => void` | — | Custom picker; omit for native input |
+
+### Example — single swatch
+
+```tsx
+<OColorSwatch value={bg} onChange={setBg} />
+```
+
+### Example — light/dark pair
+
+```tsx
+<OColorSwatch
+    value={bgLight}
+    onChange={setBgLight}
+    darkValue={bgDark}
+    onDarkChange={setBgDark}
+/>
+```
+
+### Example — with restore
+
+```tsx
+<OColorSwatch
+    value={accent}
+    onChange={setAccent}
+    darkValue={accentDark}
+    onDarkChange={setAccentDark}
+    onRestoreDefault={() => setAccent('#7c3aed')}
+/>
+```
+
+---
+
+## OSecret
+
+Obsidian `SecretComponent` mirror. Password input with show/hide toggle.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Current value |
+| `onChange` | `(value: string) => void` | — | Change handler |
+| `placeholder` | `string` | — | Placeholder |
+
+### Example — API key
+
+```tsx
+<OSecret value={apiKey} onChange={setApiKey} placeholder='sk-...' />
+```
+
+### Example — in a group
+
+```tsx
+<OSettingGroup heading='Credentials'>
+    <OSetting name='Token'>
+        <OSecret value={token} onChange={setToken} />
+    </OSetting>
+</OSettingGroup>
+```
+
+### Example — password with label
+
+```tsx
+<OSecret value={pass} onChange={setPass} aria-label='Password' placeholder='••••••' />
+```
+
+---
+
+## OSearch
+
+Obsidian `SearchComponent` mirror. `.search-input-container` with clear button.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Search query |
+| `onChange` | `(value: string) => void` | — | Change handler |
+| `placeholder` | `string` | — | Placeholder |
+
+### Example — filter list
+
+```tsx
+<OSearch value={query} onChange={setQuery} placeholder='Search notes…' />
+```
+
+### Example — settings search
+
+```tsx
+<OSearch value={filter} onChange={setFilter} aria-label='Filter settings' />
+```
+
+### Example — controlled reset
+
+```tsx
+<OSearch value={q} onChange={setQ} placeholder='Type to filter' />
+<button onClick={() => setQ('')}>Reset</button>
+```
+
+---
+
+## OButton
+
+Obsidian `ButtonComponent` mirror. `<button>` with `mod-cta` / `mod-warning` modifiers.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | — | Button text |
+| `icon` | `string` | — | Lucide icon name |
+| `onClick` | `() => void` | — | Click handler |
+| `variant` | `'default' \| 'cta' \| 'warning'` | `'default'` | Visual modifier |
+| `tooltip` | `string` | — | Tooltip (also `aria-label` fallback) |
+
+### Example — CTA
+
+```tsx
+<OButton label='Save' variant='cta' onClick={save} />
+```
+
+### Example — warning with icon
+
+```tsx
+<OButton label='Delete' icon='trash' variant='warning' onClick={remove} />
+```
+
+### Example — icon-only
+
+```tsx
+<OButton icon='refresh-cw' tooltip='Refresh' onClick={refresh} />
+```
+
+---
+
+## OExtraButton
+
+Obsidian `ExtraButtonComponent` mirror. `<button class="clickable-icon">` with an SVG icon.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `icon` | `string` | — | Lucide icon name |
+| `onClick` | `() => void` | — | Click handler |
+| `tooltip` | `string` | — | Tooltip |
+
+### Example — reset row
+
+```tsx
+<OSetting name='Font size'>
+    <OSlider value={size} onChange={setSize} min={10} max={32} step={1} />
+    <OExtraButton icon='rotate-ccw' tooltip='Reset' onClick={() => setSize(16)} />
+</OSetting>
+```
+
+### Example — copy to clipboard
+
+```tsx
+<OExtraButton icon='copy' tooltip='Copy' onClick={() => navigator.clipboard.writeText(id)} />
+```
+
+### Example — open external
+
+```tsx
+<OExtraButton icon='external-link' tooltip='Open docs' onClick={openDocs} />
+```
+
+---
+
+## OFolder
+
+Obsidian `SettingFolderControl` mirror. Folder path with vault-aware suggester.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Folder path |
+| `onChange` | `(value: string) => void` | — | Change handler |
+| `placeholder` | `string` | `'Folder path'` | Placeholder |
+| `filter` | `(path: string) => boolean` | — | Filter suggested folders |
+| `includeRoot` | `boolean` | `false` | Include `/` in suggestions |
+
+### Example — default folder
+
+```tsx
+<OFolder value={folder} onChange={setFolder} />
+```
+
+### Example — only top-level
+
+```tsx
+<OFolder
+    value={target}
+    onChange={setTarget}
+    filter={p => !p.includes('/')}
+    placeholder='Top-level folder'
+/>
+```
+
+### Example — with root
+
+```tsx
+<OFolder value={root} onChange={setRoot} includeRoot />
+```
+
+---
+
+## OFile
+
+Obsidian `SettingFileControl` mirror. Vault file path with suggester.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | File path |
+| `onChange` | `(value: string) => void` | — | Change handler |
+| `placeholder` | `string` | `'File path'` | Placeholder |
+| `filter` | `(path: string) => boolean` | — | Filter suggested files |
+
+### Example — attachment file
+
+```tsx
+<OFile value={file} onChange={setFile} />
+```
+
+### Example — markdown only
+
+```tsx
+<OFile
+    value={template}
+    onChange={setTemplate}
+    filter={p => p.endsWith('.md')}
+    placeholder='Template file'
+/>
+```
+
+### Example — in a row
+
+```tsx
+<OSetting name='Config file' desc='JSON or YAML'>
+    <OFile value={configPath} onChange={setConfigPath} />
+</OSetting>
+```
+
+---
+
+## OPathSuggestInput
+
+Generic path input with autocomplete dropdown. Used internally by `OFolder` and `OFile`; exported for custom lists.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | — | Current path |
+| `onChange` | `(value: string) => void` | — | Change handler |
+| `suggestions` | `string[]` | — | List of paths |
+| `placeholder` | `string` | — | Placeholder |
+| `emptyLabel` | `string` | `'No matches'` | Label when no suggestions match |
+
+### Example — custom tag list
+
+```tsx
+<OPathSuggestInput
+    value={tag}
+    onChange={setTag}
+    suggestions={['#inbox', '#project', '#archive']}
+    placeholder='Tag'
+/>
+```
+
+### Example — preset names
+
+```tsx
+<OPathSuggestInput
+    value={preset}
+    onChange={setPreset}
+    suggestions={presets.map(p => p.name)}
+    emptyLabel='No presets'
+/>
+```
+
+### Example — command palette style
+
+```tsx
+<OPathSuggestInput
+    value={cmd}
+    onChange={setCmd}
+    suggestions={commands}
+    placeholder='Run command…'
+/>
+```
+
+---
+
+## OSyncToggle
+
+Custom control: per-setting sync toggle. Cloud icon — synced vs local-only.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `synced` | `boolean` | — | Sync state |
+| `onChange` | `(synced: boolean) => void` | — | Change handler |
+| `tooltipEnable` | `string` | `'Enable sync'` | Tooltip when off |
+| `tooltipDisable` | `string` | `'Disable sync'` | Tooltip when on |
+
+### Example — per-setting sync
+
+```tsx
+<OSetting name='Theme' desc='Color scheme'>
+    <ODropdown value={theme} onChange={setTheme} options={themes} />
+    <OSyncToggle synced={syncTheme} onChange={setSyncTheme} />
+</OSetting>
+```
+
+### Example — custom tooltip
+
+```tsx
+<OSyncToggle
+    synced={sync}
+    onChange={setSync}
+    tooltipEnable='Sync across devices'
+    tooltipDisable='Keep local only'
+/>
+```
+
+### Example — disabled while offline
+
+```tsx
+<OSyncToggle synced={s} onChange={setS} disabled={!online} />
 ```
 
 ---
