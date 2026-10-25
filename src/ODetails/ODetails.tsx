@@ -12,7 +12,7 @@ import {
     StyleManager,
 } from '../style-manager';
 
-interface ODetailsProps {
+export interface ODetailsProps {
     name?: string;
     desc?: string;
     defaultExpanded?: boolean;
@@ -36,7 +36,7 @@ const ODetails: FC<PropsWithChildren<ODetailsProps>> = ({
     const open = isControlled ? expanded : internalOpen;
 
     useLayoutEffect(() => {
-        if (process.env.OSETTING_DISABLE_STYLES === 'true') {
+        if ((window as any).OSETTING_DISABLE_STYLES === 'true') {
             return;
         }
 

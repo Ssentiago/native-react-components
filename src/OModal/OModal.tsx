@@ -2,7 +2,7 @@ import React, { ReactPortal, useCallback, useEffect, useMemo } from 'react';
 
 import { createPortal } from 'react-dom';
 
-interface OModalProps {
+export interface OModalProps {
     children: React.ReactNode; // children React element
     title: string; // modal title (default Obsidian's)
     onClose: () => void; // action on modal closing
